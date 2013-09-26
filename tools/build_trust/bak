@@ -1,0 +1,78 @@
+#!/bin/sh
+
+dir=`dirname $0`
+dir=`cd $dir; pwd`
+
+function usage()
+{
+  echo "usage: `basename $0` -u default_user -p default_pass hostlistfile" >&2
+}
+
+if [ $# -lt 5 ]
+then
+  echo "ERROR: too few arguments" >&2
+  usage >&2
+  exit 1
+fi
+
+
+while getopts :u:p: OPTION
+do
+  case $OPTION in
+  u)    default_user="$OPTARG"
+        ;;
+  p)    default_pass="$OPTARG"
+        ;;
+  \?)   echo "ERROR: wrong option." >&2
+        usage >&2
+        exit 1
+        ;;
+  esac
+done
+
+shift `expr $OPTIND - 1`
+
+hostlist=$1
+
+if [ ! -e $hostlist ]
+then
+  echo "ERROR: host list file:$hostlist is not exist" >&2
+  exit 1
+fi
+
+local_host=`hostname`
+local_user=$default_user
+local_pass=$default_pass
+
+function formatUrl()
+{
+  if echo "$1" | grep -E "^.+:.+@.+$" &>/dev/null
+  then
+    echo "$1"
+  else
+    echo "$default_user:$default_pass@$1"
+  fi
+}
+
+
+for machine_name in `cat $hostlist`
+do
+	host_url=`formatUrl $machine_name`
+	echo "start to ssh $host_url...."
+	sshexec.sh $host_url:~ "rm .ssh/authorized_keys"
+	sshexec.sh -f "build_trust.py pexpect.py" -d $host_url:~ "python build_trust.py $local_user@$local_host $local_pass;rm -rf pexpect.pyc"
+	sshexec.sh $host_url:~ "cat ~/.ssh/id_rsa.pub">$HOME/.ssh/tmp.pub
+        cat $HOME/.ssh/tmp.pub >>$HOME/.ssh/authorized_keys
+done
+
+chmod 644 $HOME/.ssh/authorized_keys
+chmod 700 $HOME/.ssh
+chmod 711 $HOME
+for machine_name in `cat $hostlist`
+do
+	host_url=`formatUrl $machine_name`
+	echo "send to $host_url...."
+        sshexec.sh -f "$HOME/.ssh/authorized_keys" -d $host_url:~ "cat authorized_keys>.ssh/auth.tmp"
+	sshexec.sh $host_url:~ "chmod 700 .ssh;cd .ssh;cat auth.tmp >>authorized_keys;chmod 644 authorized_keys; chmod 711 ~"
+done
+
