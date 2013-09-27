@@ -107,7 +107,7 @@ if [ $hasFile = "true" ]; then
 fi
 
 # exec command
-sshpass -p "$pass" ssh "$user@$hostname" -o StrictHostKeyChecking=no "cd $workpath; $command"
+sshpass -p "$pass" ssh "$user@$hostname" -o StrictHostKeyChecking=no "cd $workpath && $command"
 exitcode=$?
 
 # if delete files
@@ -122,7 +122,7 @@ if [ $delete = "true" ]; then
             flist="$flist $f_basename"
         done
         files=$flist
-        sshpass -p "$pass" ssh "$user@$hostname" -o StrictHostKeyChecking=no "cd $workpath; rm -rf $files"
+        sshpass -p "$pass" ssh "$user@$hostname" -o StrictHostKeyChecking=no "cd $workpath && rm -rf $files"
     fi
 fi
 
