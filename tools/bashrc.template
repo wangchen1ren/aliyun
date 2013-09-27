@@ -1,0 +1,29 @@
+# .bashrc
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific aliases and functions
+export PS1="\u@\h: \W$ "
+# enable color support of ls and also add handy aliases
+if [ "$TERM" != "dumb" ]; then
+    eval `dircolors -b`
+    alias ls='ls --color=auto'
+    alias dir='ls --color=auto --format=vertical'
+    alias vdir='ls --color=auto --format=long'
+fi 
+
+PATH=$PATH:$HOME/bin
+SOFTWARE=$HOME/software
+
+for b in `ls $SOFTWARE`; do
+    if [ -d $SOFTWARE/$b ]; then
+        if [ -d $SOFTWARE/$b/bin ]; then
+            PATH=$SOFTWARE/$b/bin:$PATH
+        fi
+    fi
+done
+export PATH
+export JAVA_HOME=$SOFTWARE/java6
+
