@@ -41,7 +41,7 @@ if [ -f "${CONF_DIR}/env.sh" ]; then
 fi
 
 # Deal with arguments
-export host="localhost"
+export host=""
 export root_passwd="root"
 export work_user="work"
 export work_passwd="work"
@@ -72,5 +72,10 @@ while [ "X$1" != "X" ]; do
         ;;
     esac
 done
+
+if [ "X$host" = "X" ]; then
+    echo "HOST not set"
+    exit 1
+fi
 
 export sshexec="$TOOLS_HOME/sshexec/bin/sshexec.sh"

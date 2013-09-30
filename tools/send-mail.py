@@ -16,7 +16,8 @@ subject = ""
 mailto = []
 
 def usage():
-    print("Usage:%s [-a|-o|-c] [--help|--output] args...." %Dsys.argv[0]) 
+    print("Usage:%s <-s|-t> [--subject|--to]" %sys.argv[0]) 
+    sys.exit(1)
 
 def send_mail(mailto, subject, content):
     user = sender['user']
@@ -51,12 +52,8 @@ def parse_args():
                 sub = arg
             elif opt in ('-t', '--to'):
                 to = arg
-        if sub == '':
-            print "No subject"
-            sys.exit(1)
-        if to == "":
-            print "No mailto"
-            sys.exit(1)
+        if sub == '' or to == "":
+            usage()
         return sub, to.split()
     except getopt.GetoptError:
         usage()

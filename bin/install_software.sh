@@ -36,7 +36,7 @@ function install() {
             echo -e "\033[31m[$i/$n] Failed to upload $name.tar.gz\033[0m"
             exit 1
         fi
-        $sshexec $work_user:$work_passwd@$host:~/software "tar zxf $name.tar.gz"
+        $sshexec $work_user:$work_passwd@$host:~/software "tar zxf $name.tar.gz && rm -f $name.tar.gz"
         if [ $? -eq 0 ]; then
             echo -e "\033[32m[$i/$n] Complete install $name.\033[0m"
         else

@@ -35,12 +35,13 @@ function stop_services() {
     fi
 }
 
-function update_config() {
-    $sshexec $work_user:$work_passwd@$host:~/deploy/$date "sh update_config.sh"
+function update_files() {
+    $sshexec -f $TOOLS_HOME/update_files.sh -d \
+        $work_user:$work_passwd@$host:~/deploy/$date "sh update_files.sh"
     if [ $? -eq 0 ]; then
-        echo "update config success"
+        echo "update files success"
     else
-        echo "error update config"
+        echo "error update files"
         exit 1
     fi
 }
@@ -56,17 +57,19 @@ function start_services() {
     fi
 }
 
-export n=`ls $MACHINE_HOME | wc -l`
-i=0
-for host in `ls $MACHINE_HOME`; do
-    ((i=$i+1))
-    export i=$i
-    export host=$host
-    echo -e "\033[32m[$i/$n] Start services on $host ...\033[0m"
+function main() {
+    echo -e "\033[32m===========================================\033[0m"
+    echo -e "\033[32m= Start services on $host ...\033[0m"
+    echo -e "\033[32m===========================================\033[0m"
+
     upload_files
     stop_services
-    update_config
+    update_files
     start_services
-    echo -e "\033[32m[$i/$n] Complete $host.\033[0m"
-done
 
+    echo -e "\033[32m===========================================\033[0m"
+    echo -e "\033[32m= Complete $host.\033[0m"
+    echo -e "\033[32m===========================================\033[0m"
+}
+
+main
