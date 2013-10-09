@@ -79,3 +79,9 @@ if [ "X$host" = "X" ]; then
 fi
 
 export sshexec="$TOOLS_HOME/sshexec/bin/sshexec.sh"
+
+WORKDIR=$ROOT_HOME/workdir
+if [ ! -d $WORKDIR ]; then
+    mkdir -p $WORKDIR
+fi
+
