@@ -15,6 +15,7 @@ class Tomcat(Software):
 
     CONST_FULLNAME = 'apache-tomcat'
     CONST_DEFAULT_VERSION = '7.0.42'
+    CONST_DEFAULT_PORT = 8080
     CONST_APP_SUFFIX = '.war'
 
     def __init__(self, id, config):
@@ -42,9 +43,6 @@ class Tomcat(Software):
         pass
 
     def gen_script_content(self):
-        s = []
-        s.append('#!/bin/sh')
-        s.append('dir=`dirname $0`')
-        s.append('dir=`cd $dir; pwd`')
-        s.append('sh $dir/../bin/startup.sh')
-        return '\n'.join(s)
+        cmd = 'sh $dir/../bin/startup.sh'
+        s = '\n'.join(self.START_SCRIPT_CONTENT) % (self.port, cmd)
+        return s

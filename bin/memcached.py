@@ -12,34 +12,18 @@ class Memcached(Software):
 
     CONST_FULLNAME = 'memcached'
     CONST_DEFAULT_VERSION = '1.4.15'
+    CONST_DEFAULT_PORT = '11211'
 
     def __init__(self, id, config):
         Software.__init__(self, id, config)
         pass
 
-    def gen_bin(self):
-        bin_dir = os.path.join(self.path, 'bin')
-        if not os.path.isdir(bin_dir):
-            os.mkdir(bin_dir)
-        start_script = os.path.join(bin_dir, NOAH_START_SCRIPT)
-        f = file(start_script, 'w')
-        f.write(self.__gen_script_content())
-        f.close()
-        pass
-
-    def __gen_script_content(self):
-        s = []
-        s.append('#!/bin/sh')
-        s.append('dir=`dirname $0`')
-        s.append('dir=`cd $dir; pwd`')
-        s.append('if /usr/sbin/lsof -i 
-        port = self.config['port'].strip()
+    def gen_script_content(self):
         cmd = '$dir/../bin/memcached'
-        if self.config.has_key('port'):
-            cmd += ' -p ' + 
+        cmd += ' -p ' + self.port
         if self.config.has_key('memory'):
             cmd += ' -m ' + self.config['memory'].strip()
         if self.config.has_key('daemon'):
             cmd += ' -d'
-        s.append(cmd)
-        return '\n'.join(s)
+        s = '\n'.join(self.START_SCRIPT_CONTENT) % (self.port, cmd)
+        return s

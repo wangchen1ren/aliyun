@@ -12,6 +12,7 @@ class Nginx(Software):
 
     CONST_FULLNAME = 'nginx'
     CONST_DEFAULT_VERSION = '1.5.4'
+    CONST_DEFAULT_PORT = 8888
     CONST_CONF_FILES = ['nginx.conf', 'proxy.conf']
 
     def __init__(self, id, config):
@@ -25,9 +26,6 @@ class Nginx(Software):
         pass
 
     def gen_script_content(self):
-        s = []
-        s.append('#!/bin/sh')
-        s.append('dir=`dirname $0`')
-        s.append('dir=`cd $dir; pwd`')
-        s.append('$dir/../sbin/nginx')
-        return '\n'.join(s)
+        cmd = '$dir/../sbin/nginx'
+        s = '\n'.join(self.START_SCRIPT_CONTENT) % (self.port, cmd)
+        return s

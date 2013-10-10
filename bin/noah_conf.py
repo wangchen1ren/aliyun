@@ -6,6 +6,9 @@ from xml.etree import ElementTree
 from constants import *
 
 class NoahConf:
+
+    CONST_DEFAULT_PASSWORD = 'password'
+
     def __init__(self):
         self.__nodes = []
         self.__accounts = {}
@@ -71,7 +74,8 @@ class NoahConf:
         if self.__accounts.has_key(id):
             return self.__accounts[id]
         else:
-            print 'No password for ' + user + '@' + host
+            print 'WARN: No password for ' + user + '@' + host
+            print '      Use default password "' + self.CONST_DEFAULT_PASSWORD + '"'
             return "password"
         pass
 
