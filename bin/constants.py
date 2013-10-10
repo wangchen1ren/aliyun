@@ -12,4 +12,5 @@ NOAH_STOP_SCRIPT = 'noah_stop.sh'
 
 WORK_DIR = os.path.join(NOAH_HOME, 'workdir')
 INSTANCE_DIR = os.path.join(WORK_DIR, 'instance')
+APP_DIR = os.path.join(NOAH_HOME, 'app')
 

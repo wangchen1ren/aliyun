@@ -18,7 +18,7 @@
             </property>
             <property>
                 <name>applist</name>
-                <value></value>
+                <value>edmsv1, edmsv2</value>
             </property>
         </software>
         <software name="memcached" >

@@ -5,4 +5,5 @@ bin=`cd $bin; pwd`
 
 . "$bin"/common.sh
 
+sh $bin/clean.sh
 python deploy.py

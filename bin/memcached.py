@@ -32,11 +32,13 @@ class Memcached(Software):
         s.append('#!/bin/sh')
         s.append('dir=`dirname $0`')
         s.append('dir=`cd $dir; pwd`')
+        s.append('if /usr/sbin/lsof -i 
+        port = self.config['port'].strip()
         cmd = '$dir/../bin/memcached'
         if self.config.has_key('port'):
-            cmd += ' -p ' + self.config['port']
+            cmd += ' -p ' + 
         if self.config.has_key('memory'):
-            cmd += ' -m ' + self.config['memory']
+            cmd += ' -m ' + self.config['memory'].strip()
         if self.config.has_key('daemon'):
             cmd += ' -d'
         s.append(cmd)
