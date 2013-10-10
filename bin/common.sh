@@ -22,7 +22,6 @@ this="$bin/$script"
 export NOAH_HOME=`dirname "$bin"`
 export TOOLS_HOME=$NOAH_HOME/tools
 export SOFT_HOME=$NOAH_HOME/software
-export MACHINE_HOME=$NOAH_HOME/machines
 
 if [ $# -gt 1 ]; then
   if [ "--config" = "$1" ]; then
@@ -77,8 +76,11 @@ export sshexec="$TOOLS_HOME/sshexec/bin/sshexec.sh"
 
 WORKDIR=$NOAH_HOME/workdir
 LOGDIR=$WORKDIR/log
+INSTANCEDIR=$WORKDIR/instance
 if [ ! -d $LOGDIR ]; then
     mkdir -p $LOGDIR
 fi
 
-
+if [ ! -d $INSTANCEDIR ]; then
+    mkdir -p $INSTANCEDIR
+fi

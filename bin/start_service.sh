@@ -23,12 +23,12 @@ export date=`date +%Y%m%d`
 function upload_files() {
     echo "[1/4] Uploading files ..."
     # gen local md5
-    cd $MACHINE_HOME/$work_user@$host
+    cd $INSTANCEDIR/$work_user@$host
     find . -type f | xargs md5sum | sort >.tmp_local_md5 2>/dev/null
-    cd $bin && mv $MACHINE_HOME/$work_user@$host/.tmp_local_md5 $bin/
+    cd $bin && mv $INSTANCEDIR/$work_user@$host/.tmp_local_md5 $bin/
     # upload file and gen remote md5
     cmd="rm -rf $date && mv $work_user@$host $date && cd $date && find . -type f | xargs md5sum | sort"
-    $sshexec -f $MACHINE_HOME/$work_user@$host \
+    $sshexec -f $INSTANCEDIR/$work_user@$host \
         $work_user:$work_passwd@$host:/home/$work_user/deploy "$cmd" >.tmp_remote_md5 2>>$log
     # check if upload successful
     echo "[1/4] Checking md5sum ..."
@@ -75,7 +75,7 @@ function start() {
 }
 
 function start_service() {
-    if [ ! -d "$MACHINE_HOME/$work_user@$host" ]; then
+    if [ ! -d "$INSTANCEDIR/$work_user@$host" ]; then
         echo "Config of $work_user@$host not found!" >&2
         exit 1
     fi

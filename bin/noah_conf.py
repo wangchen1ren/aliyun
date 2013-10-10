@@ -45,7 +45,7 @@ class NoahConf:
                         soft_prop[name.text] = value.text
                     node['soft'][soft_name] = soft_prop
                 self.__nodes.append(node)
-            print self.__nodes
+            #print self.__nodes
         pass
 
     def __read_accounts(self, accounts_file):

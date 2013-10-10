@@ -9,12 +9,23 @@ from constants import *
 from software import Software
 
 class Nginx(Software):
+
+    CONST_FULLNAME = 'nginx'
+    CONST_DEFAULT_VERSION = '1.5.4'
+    CONST_CONF_FILES = ['nginx.conf', 'proxy.conf']
+
     def __init__(self, id, config):
-        self.__fullname = 'nginx'
-        self.__default_version = "1.5.4"
-        self.__path = os.path.join(INSTANCE_DIR, id)
-        self.__config = config
+        Software.__init__(self, id, config)
         pass
 
     def gen_conf(self):
+        conf_dir = os.path.join(self.path, 'conf')
+        if not os.path.isdir(conf_dir):
+            os.mkdir(conf_dir)
         pass
+
+    def gen_script_content(self):
+        s = []
+        s.append('#!/bin/sh')
+        s.append('../sbin/nginx')
+        return '\n'.join(s)

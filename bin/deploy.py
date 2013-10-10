@@ -25,7 +25,7 @@ def call_shell(conf, node, script_file):
     script = os.path.join(NOAH_BIN_DIR, script_file)
     cmd = "sh %s -h %s -r %s -u %s -p %s" % (script, host,
             root_password, user, password)
-    print cmd
+    #print cmd
     '''
     ret = subprocess.call(cmd, shell = True)
     if ret != 0:
@@ -43,11 +43,9 @@ def init_machines(conf):
         script = os.path.join(NOAH_BIN_DIR, 'machine_init.sh')
         cmd = "sh %s -h %s -r %s" % (script, host, root_password)
         #print cmd
-        '''
         ret = subprocess.call(cmd, shell = True)
         if ret != 0:
             sys.exit(ret)
-        '''
     pass
 
 def create_work_user(conf, node):
@@ -56,18 +54,47 @@ def create_work_user(conf, node):
 def install_software(conf, node):
     call_shell(conf, node, 'install_software.sh')
 
-def gen_conf(id, soft, conf):
+def gen_start_script(id, softs):
+    instance_home = os.path.join(INSTANCE_DIR, id)
+    start_script = os.path.join(instance_home, NOAH_START_SCRIPT)
+    s = []
+    s.append('#!/bin/sh')
+    for soft in softs:
+        s.append(soft.get_start_command() + ' && \\')
+    s.append('echo >/dev/null')
+    content = '\n'.join(s)
+    f = file(start_script, 'w')
+    f.write(content)
+    f.close()
+    pass
+
+def gen_stop_script(id, softs):
+    instance_home = os.path.join(INSTANCE_DIR, id)
+    stop_script = os.path.join(instance_home, NOAH_STOP_SCRIPT)
+    s = []
+    s.append('#!/bin/sh')
+    for soft in softs:
+        s.append(soft.get_stop_command() + ' && \\')
+    s.append('echo >/dev/null')
+    content = '\n'.join(s)
+    f = file(stop_script, 'w')
+    f.write(content)
+    f.close()
     pass
 
 def gen_software_update_package(conf, node):
     host, user, password = parse_node(conf, node)
     id = user + '@' + host
+    software_instance = []
     for soft in node['soft']:
         class_name = soft.capitalize()
         s = eval(class_name)(id, node['soft'][soft])
+        software_instance.append(s)
         s.gen_conf()
         s.gen_bin()
         s.gen_app()
+    gen_start_script(id, software_instance)
+    gen_stop_script(id, software_instance)
     pass
 
 def start_service(conf, node):
@@ -75,9 +102,9 @@ def start_service(conf, node):
 
 def main():
     conf = NoahConf()
-    init_machines(conf)
+    #init_machines(conf)
     for node in conf.get_nodes():
-        create_work_user(conf, node)
+        #create_work_user(conf, node)
         install_software(conf, node)
         gen_software_update_package(conf, node)
         start_service(conf, node)
