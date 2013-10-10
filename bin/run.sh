@@ -3,6 +3,6 @@
 bin=`dirname "$0"`
 bin=`cd $bin; pwd`
 
-. "$bin"/config.sh
+. "$bin"/common.sh
 
-
+python deploy.py

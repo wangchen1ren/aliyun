@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <Node host="112.124.22.199" username="work" >
+        <software name="nginx" >
+            <property>
+                <name>version</name>
+                <value>1.5.4</value>
+            </property>
+            <property>
+                <name>port</name>
+                <value>6000</value>
+            </property>
+        </software>
+        <software name="tomcat" >
+            <property>
+                <name>port</name>
+                <value>6100</value>
+            </property>
+            <property>
+                <name>applist</name>
+                <value></value>
+            </property>
+        </software>
+        <software name="memcached" >
+            <property>
+                <name>port</name>
+                <value>6200</value>
+            </property>
+            <property>
+                <name>memory</name>
+                <value>64m</value>
+            </property>
+            <property>
+                <name>daemon</name>
+                <value>true</value>
+            </property>
+        </software>
+    </Node>
+    <Node host="112.124.22.199" username="work1" >
+        <software name="nginx" >
+            <property>
+                <name>port</name>
+                <value>7000</value>
+            </property>
+        </software>
+        <software name="tomcat" >
+            <property>
+                <name>port</name>
+                <value>7100</value>
+            </property>
+            <property>
+                <name>applist</name>
+                <value></value>
+            </property>
+        </software>
+        <software name="memcached" >
+            <property>
+                <name>port</name>
+                <value>7200</value>
+            </property>
+            <property>
+                <name>memory</name>
+                <value>64m</value>
+            </property>
+            <property>
+                <name>daemon</name>
+                <value>true</value>
+            </property>
+        </software>
+    </Node>
+</configuration>

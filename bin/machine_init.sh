@@ -5,7 +5,7 @@ bin=`cd $bin; pwd`
 
 . "$bin"/common.sh "$@"
 
-log=$WORKDIR/`basename $0 .sh`.log
+log=$LOGDIR/`basename $0 .sh`.log
 echo >>$log
 echo "====================================" >>$log
 echo "`date`" >>$log

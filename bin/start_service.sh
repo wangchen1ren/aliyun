@@ -5,7 +5,7 @@ bin=`cd $bin; pwd`
 
 . "$bin"/common.sh "$@"
 
-log=$WORKDIR/`basename $0 .sh`.log
+log=$LOGDIR/`basename $0 .sh`.log
 echo >>$log
 echo "====================================" >>$log
 echo "`date`" >>$log
@@ -24,15 +24,15 @@ function upload_files() {
     echo "[1/4] Uploading files ..."
     # gen local md5
     cd $MACHINE_HOME/$work_user@$host
-    find . -type f | xargs md5sum | sort >.local_md5 2>/dev/null
-    cd $bin && mv $MACHINE_HOME/$work_user@$host/.local_md5 $bin/
+    find . -type f | xargs md5sum | sort >.tmp_local_md5 2>/dev/null
+    cd $bin && mv $MACHINE_HOME/$work_user@$host/.tmp_local_md5 $bin/
     # upload file and gen remote md5
     cmd="rm -rf $date && mv $work_user@$host $date && cd $date && find . -type f | xargs md5sum | sort"
     $sshexec -f $MACHINE_HOME/$work_user@$host \
-        $work_user:$work_passwd@$host:/home/$work_user/deploy "$cmd" >.remote_md5 2>>$log
+        $work_user:$work_passwd@$host:/home/$work_user/deploy "$cmd" >.tmp_remote_md5 2>>$log
     # check if upload successful
     echo "[1/4] Checking md5sum ..."
-    if diff .local_md5 .remote_md5 >>$log 2>&1; then
+    if diff .tmp_local_md5 .tmp_remote_md5 >>$log 2>&1; then
         echo "[1/4] Upload file done."
     else
         echo -e "\033[31mError in uploading files to $work_user@$host.\033[0m" >&2

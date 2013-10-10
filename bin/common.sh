@@ -19,25 +19,25 @@ script=`basename "$this"`
 bin=`cd "$bin"; pwd`
 this="$bin/$script"
 
-export ROOT_HOME=`dirname "$bin"`
-export TOOLS_HOME=$ROOT_HOME/tools
-export SOFT_HOME=$ROOT_HOME/software
-export MACHINE_HOME=$ROOT_HOME/machines
+export NOAH_HOME=`dirname "$bin"`
+export TOOLS_HOME=$NOAH_HOME/tools
+export SOFT_HOME=$NOAH_HOME/software
+export MACHINE_HOME=$NOAH_HOME/machines
 
 if [ $# -gt 1 ]; then
   if [ "--config" = "$1" ]; then
     shift
     confdir=$1
     shift
-    CONF_DIR=$confdir
+    NOAH_CONF_DIR=$confdir
   fi
 fi
 
 # Allow alternate conf dir location.
-export CONF_DIR="${CONF_DIR:-$ROOT_HOME/conf}"
+export NOAH_CONF_DIR="${NOAH_CONF_DIR:-$NOAH_HOME/conf}"
 
-if [ -f "${CONF_DIR}/env.sh" ]; then
-  . "${CONF_DIR}/env.sh"
+if [ -f "${NOAH_CONF_DIR}/env.sh" ]; then
+  . "${NOAH_CONF_DIR}/env.sh"
 fi
 
 # Deal with arguments
@@ -73,15 +73,12 @@ while [ "X$1" != "X" ]; do
     esac
 done
 
-if [ "X$host" = "X" ]; then
-    echo "HOST not set"
-    exit 1
-fi
-
 export sshexec="$TOOLS_HOME/sshexec/bin/sshexec.sh"
 
-WORKDIR=$ROOT_HOME/workdir
-if [ ! -d $WORKDIR ]; then
-    mkdir -p $WORKDIR
+WORKDIR=$NOAH_HOME/workdir
+LOGDIR=$WORKDIR/log
+if [ ! -d $LOGDIR ]; then
+    mkdir -p $LOGDIR
 fi
+
 
