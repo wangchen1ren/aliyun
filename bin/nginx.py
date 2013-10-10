@@ -27,5 +27,7 @@ class Nginx(Software):
     def gen_script_content(self):
         s = []
         s.append('#!/bin/sh')
-        s.append('../sbin/nginx')
+        s.append('dir=`dirname $0`')
+        s.append('dir=`cd $dir; pwd`')
+        s.append('$dir/../sbin/nginx')
         return '\n'.join(s)

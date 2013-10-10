@@ -30,7 +30,9 @@ class Memcached(Software):
     def __gen_script_content(self):
         s = []
         s.append('#!/bin/sh')
-        cmd = '../bin/memcached'
+        s.append('dir=`dirname $0`')
+        s.append('dir=`cd $dir; pwd`')
+        cmd = '$dir/../bin/memcached'
         if self.config.has_key('port'):
             cmd += ' -p ' + self.config['port']
         if self.config.has_key('memory'):

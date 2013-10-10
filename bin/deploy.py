@@ -26,11 +26,9 @@ def call_shell(conf, node, script_file):
     cmd = "sh %s -h %s -r %s -u %s -p %s" % (script, host,
             root_password, user, password)
     #print cmd
-    '''
     ret = subprocess.call(cmd, shell = True)
     if ret != 0:
         sys.exit(ret)
-    '''
     pass
 
 def init_machines(conf):
@@ -74,7 +72,7 @@ def gen_stop_script(id, softs):
     s = []
     s.append('#!/bin/sh')
     for soft in softs:
-        s.append(soft.get_stop_command() + ' && \\')
+        s.append(soft.get_stop_command())
     s.append('echo >/dev/null')
     content = '\n'.join(s)
     f = file(stop_script, 'w')

@@ -36,6 +36,7 @@
             </property>
         </software>
     </Node>
+    <!--
     <Node host="112.124.22.199" username="work1" >
         <software name="nginx" >
             <property>
@@ -68,4 +69,5 @@
             </property>
         </software>
     </Node>
+    -->
 </configuration>

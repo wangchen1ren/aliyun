@@ -14,6 +14,10 @@ for f in `find . -type f`; do
         if [ -f $softdir/$f ]; then
             cp $softdir/$f $f.bak
         fi
+        sdir=`dirname $softdir/$f`
+        if [ ! -d $sdir ]; then
+            mkdir -p $sdir
+        fi
         cp $f $softdir/$f
     fi
 done

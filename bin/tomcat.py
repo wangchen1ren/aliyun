@@ -20,5 +20,7 @@ class Tomcat(Software):
     def gen_script_content(self):
         s = []
         s.append('#!/bin/sh')
-        s.append('sh ../bin/startup.sh')
+        s.append('dir=`dirname $0`')
+        s.append('dir=`cd $dir; pwd`')
+        s.append('sh $dir/../bin/startup.sh')
         return '\n'.join(s)

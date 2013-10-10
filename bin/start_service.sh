@@ -42,7 +42,7 @@ function upload_files() {
 
 function stop() {
     echo "[2/4] Stopping current service ..."
-    $sshexec $work_user:$work_passwd@$host:/home/$work_user/deploy/$date "sh stop.sh" >>$log 2>&1
+    $sshexec $work_user:$work_passwd@$host:/home/$work_user/deploy/$date "sh noah_stop.sh" >>$log 2>&1
     if [ $? -eq 0 ]; then
         echo "[2/4] Services stopped."
     else
@@ -65,7 +65,7 @@ function update_files() {
 
 function start() {
     echo "[4/4] Starting services ..."
-    $sshexec $work_user:$work_passwd@$host:/home/$work_user/deploy/$date "sh start.sh" >>$log 2>&1
+    $sshexec $work_user:$work_passwd@$host:/home/$work_user/deploy/$date "sh noah_start.sh" >>$log 2>&1
     if [ $? -eq 0 ]; then
         echo "[4/4] Start services success"
     else
