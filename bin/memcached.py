@@ -14,16 +14,12 @@ class Memcached(Software):
     CONST_DEFAULT_VERSION = '1.4.15'
     CONST_DEFAULT_PORT = 11211
 
-    def __init__(self, id, config):
-        Software.__init__(self, id, config)
-        pass
-
-    def gen_script_content(self):
+    def _gen_script_content(self):
         cmd = '$dir/../bin/memcached'
-        cmd += ' -p ' + self.port
-        if self.config.has_key('memory'):
-            cmd += ' -m ' + self.config['memory'].strip()
-        if self.config.has_key('daemon'):
+        cmd += ' -p ' + self._port
+        if self._config.has_key('memory'):
+            cmd += ' -m ' + self._config['memory'].strip()
+        if self._config.has_key('daemon'):
             cmd += ' -d'
-        s = '\n'.join(self.START_SCRIPT_CONTENT) % (self.port, cmd)
+        s = '\n'.join(self.START_SCRIPT_CONTENT) % (self._port, cmd)
         return s

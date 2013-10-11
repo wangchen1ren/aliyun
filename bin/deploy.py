@@ -100,12 +100,12 @@ def start_service(conf, node):
 
 def main():
     conf = NoahConf()
-    #init_machines(conf)
+    init_machines(conf)
     for node in conf.get_nodes():
-        #create_work_user(conf, node)
-        #install_software(conf, node)
+        create_work_user(conf, node)
+        install_software(conf, node)
         gen_software_update_package(conf, node)
-        #start_service(conf, node)
+        start_service(conf, node)
     pass
 
 if __name__ == '__main__':

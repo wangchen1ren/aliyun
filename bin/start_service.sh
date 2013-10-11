@@ -24,12 +24,14 @@ function upload_files() {
     echo "[1/4] Uploading files ..."
     # gen local md5
     cd $INSTANCEDIR/$work_user@$host
-    find . -type f | xargs md5sum | sort >.tmp_local_md5 2>/dev/null
-    cd $bin && mv $INSTANCEDIR/$work_user@$host/.tmp_local_md5 $bin/
+    find . -type f | xargs md5sum | sort >../.tmp_local_md5 2>/dev/null
+    cd $bin && mv $INSTANCEDIR/.tmp_local_md5 $bin/
     # upload file and gen remote md5
-    cmd="rm -rf $date && mv $work_user@$host $date && cd $date && find . -type f | xargs md5sum | sort"
+    cmd="rm -rf $date && mv $work_user@$host $date"
+    cmd="$cmd && cd $date && find . -type f | xargs md5sum | sort"
     $sshexec -f $INSTANCEDIR/$work_user@$host \
-        $work_user:$work_passwd@$host:/home/$work_user/deploy "$cmd" >.tmp_remote_md5 2>>$log
+        $work_user:$work_passwd@$host:/home/$work_user/deploy \
+        "$cmd" >.tmp_remote_md5 2>>$log
     # check if upload successful
     echo "[1/4] Checking md5sum ..."
     if diff .tmp_local_md5 .tmp_remote_md5 >>$log 2>&1; then
@@ -42,7 +44,8 @@ function upload_files() {
 
 function stop() {
     echo "[2/4] Stopping current service ..."
-    $sshexec $work_user:$work_passwd@$host:/home/$work_user/deploy/$date "sh noah_stop.sh" >>$log 2>&1
+    $sshexec $work_user:$work_passwd@$host:/home/$work_user/deploy/$date \
+        "sh noah_stop.sh" >>$log 2>&1
     if [ $? -eq 0 ]; then
         echo "[2/4] Services stopped."
     else
@@ -54,7 +57,8 @@ function stop() {
 function update_files() {
     echo "[3/4] Updating files ..."
     $sshexec -f $TOOLS_HOME/update_files.sh -d \
-        $work_user:$work_passwd@$host:/home/$work_user/deploy/$date "sh update_files.sh" >>$log 2>&1
+        $work_user:$work_passwd@$host:/home/$work_user/deploy/$date \
+        "sh update_files.sh $work_user" >>$log 2>&1
     if [ $? -eq 0 ]; then
         echo "[3/4] Update files success."
     else
@@ -65,7 +69,8 @@ function update_files() {
 
 function start() {
     echo "[4/4] Starting services ..."
-    $sshexec $work_user:$work_passwd@$host:/home/$work_user/deploy/$date "sh noah_start.sh" >>$log 2>&1
+    $sshexec $work_user:$work_passwd@$host:/home/$work_user/deploy/$date \
+        "sh noah_start.sh" >>$log 2>&1
     if [ $? -eq 0 ]; then
         echo "[4/4] Start services success"
     else

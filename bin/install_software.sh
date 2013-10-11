@@ -37,8 +37,8 @@ function install() {
         md5=`md5sum $SOFT_HOME/$name.tar.gz | awk '{print $1}'`
         $sshexec -f $SOFT_HOME/$name.tar.gz \
             $work_user:$work_passwd@$host:~/software \
-            "md5sum $name.tar.gz" >.remote_md5 2>>$log
-        remote_md5=`cat .remote_md5 | awk '{print $1}'`
+            "md5sum $name.tar.gz" >.tmp_remote_soft_md5 2>>$log
+        remote_md5=`cat .tmp_remote_soft_md5 | awk '{print $1}'`
         if [ "$md5" = "$remote_md5" ]; then
             echo -e "\033[32m[$i/$n]\033[0m Upload file done."
         else

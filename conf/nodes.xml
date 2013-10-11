@@ -18,7 +18,7 @@
             </property>
             <property>
                 <name>applist</name>
-                <value>edmsv1, edmsv2</value>
+                <value>edmsv1</value>
             </property>
         </software>
         <software name="memcached" >
@@ -36,7 +36,6 @@
             </property>
         </software>
     </Node>
-    <!--
     <Node host="112.124.22.199" username="work1" >
         <software name="nginx" >
             <property>
@@ -69,5 +68,4 @@
             </property>
         </software>
     </Node>
-    -->
 </configuration>

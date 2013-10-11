@@ -5,11 +5,11 @@ __author__ = "wangchen"
 __email__ = "pdd.list@e-future.com.cn"
 __version__ = "1.0.0"
 
-import shutil
 import subprocess
 
 from constants import *
 from software import Software
+from utils import *
 
 class Tomcat(Software):
 
@@ -20,35 +20,33 @@ class Tomcat(Software):
 
     CONFIG_FILE_LIST = ['conf/server.xml']
 
-    def __init__(self, id, config):
-        Software.__init__(self, id, config)
-        pass
-
     def gen_conf(self):
         Software.gen_conf(self)
         pass
 
     def gen_app(self):
-        dest_root = os.path.join(self.path, 'webapps')
-        applist = self.config['applist'].split(',')
+        dest_root = os.path.join(self._path, 'webapps')
+        if not self._config['applist']:
+            applist = []
+        else:
+            applist = self._config['applist'].split(',')
         for app in applist:
             app = app.strip()
             app_filename = app + self.CONST_APP_SUFFIX
             src = os.path.join(APP_DIR, app_filename)
-            dest_dir = os.path.join(dest_root, app)
-            if not os.path.isdir(dest_dir):
-                os.makedirs(dest_dir)
-            shutil.copy(src, dest_dir)
+            dst = os.path.join(dest_root, app, app_filename)
+            copyfile(src, dst)
 
             #uncompress
-            cmd = "cd %s && jar -xf %s" % (dest_dir, app_filename)
+            dst_dir = os.path.dirname(dst)
+            cmd = "cd %s && jar -xf %s" % (dst_dir, app_filename)
             ret = subprocess.call(cmd, shell = True)
             if ret != 0:
                 sys.exit(ret)
-            os.remove(os.path.join(dest_dir, app_filename))
+            os.remove(dst)
         pass
 
-    def gen_script_content(self):
+    def _gen_script_content(self):
         cmd = 'sh $dir/../bin/startup.sh'
-        s = '\n'.join(self.START_SCRIPT_CONTENT) % (self.port, cmd)
+        s = '\n'.join(self.START_SCRIPT_CONTENT) % (self._port, cmd)
         return s

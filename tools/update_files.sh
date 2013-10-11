@@ -3,8 +3,10 @@
 dir=`dirname $0`
 dir=`cd $dir; pwd`
 
+user=$1
+
 basedir=$dir
-softdir=/home/work/software
+softdir=/home/$user/software
 
 for f in `find . -type f`; do
     dirname=`dirname $f`
