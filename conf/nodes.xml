@@ -7,14 +7,22 @@
                 <value>1.5.4</value>
             </property>
             <property>
-                <name>port</name>
+                <name>listen.port</name>
                 <value>6000</value>
             </property>
         </software>
         <software name="tomcat" >
             <property>
-                <name>port</name>
+                <name>path.config.file.conf.server.xml</name>
+                <value>/home/frozenpig/workspace/aliyun/tmp/test</value>
+            </property>
+            <property>
+                <name>listen.port</name>
                 <value>6100</value>
+            </property>
+            <property>
+                <name>shutdown.port</name>
+                <value>6101</value>
             </property>
             <property>
                 <name>applist</name>
@@ -23,7 +31,7 @@
         </software>
         <software name="memcached" >
             <property>
-                <name>port</name>
+                <name>listen.port</name>
                 <value>6200</value>
             </property>
             <property>
@@ -39,14 +47,18 @@
     <Node host="112.124.22.199" username="work1" >
         <software name="nginx" >
             <property>
-                <name>port</name>
+                <name>listen.port</name>
                 <value>7000</value>
             </property>
         </software>
         <software name="tomcat" >
             <property>
-                <name>port</name>
+                <name>listen.port</name>
                 <value>7100</value>
+            </property>
+            <property>
+                <name>shutdown.port</name>
+                <value>7101</value>
             </property>
             <property>
                 <name>applist</name>
@@ -55,7 +67,7 @@
         </software>
         <software name="memcached" >
             <property>
-                <name>port</name>
+                <name>listen.port</name>
                 <value>7200</value>
             </property>
             <property>

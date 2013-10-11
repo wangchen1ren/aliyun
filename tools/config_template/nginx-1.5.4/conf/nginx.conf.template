@@ -1,4 +1,5 @@
 
+user #USER#;
 worker_processes 1;
 error_log  logs/error.log  info;
 
@@ -54,12 +55,6 @@ http
 #  gzip_vary on;
 
 #limit_zone  crawler  $binary_remote_addr  10m;
-
-    server{
-        server_name _;
-        return 404;
-    }
-
 
     server
     {

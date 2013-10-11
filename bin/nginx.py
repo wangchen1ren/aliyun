@@ -13,15 +13,21 @@ class Nginx(Software):
     CONST_FULLNAME = 'nginx'
     CONST_DEFAULT_VERSION = '1.5.4'
     CONST_DEFAULT_PORT = 8888
-    CONST_CONF_FILES = ['conf/nginx.conf', 'conf/proxy.conf']
+
+    DEFAULT_CONFIG_FILE_LIST = ['conf/nginx.conf', 'conf/proxy.conf']
 
     # public
     def gen_conf(self):
         Software.gen_conf(self)
         pass
 
+    def _software_config_op(self, path):
+        self._replace_port(path)
+        self._replace_user(path)
+        pass
+
     # protected && overwrite
     def _gen_script_content(self):
-        cmd = '$dir/../sbin/nginx'
+        cmd = '$dir/../sbin/nginx -p $dir/.. -c $dir/../conf/nginx.conf'
         s = '\n'.join(self.START_SCRIPT_CONTENT) % (self._port, cmd)
         return s

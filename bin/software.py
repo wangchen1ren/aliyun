@@ -21,8 +21,12 @@ class Software:
                             "fi"
                             ]
 
-    CONFIG_FILE_LIST = []
+    DEFAULT_CONFIG_FILE_LIST = []
+
+    CONFIG_FILE_PROPERTY_PREFIX = 'path.config.file.'
     CONST_CONFIG_TEMPATE_FILE_SUFFIX = '.template'
+
+    USER_LABEL = '#USER#'
     PORT_LABEL = '#PORT#'
 
     ################################
@@ -30,6 +34,7 @@ class Software:
     ################################
 
     def __init__(self, id, config):
+        self._user = id.split('@')[0]
         self._config = config
         self.__init_fullname()
         self.__init_path(id)
@@ -37,14 +42,24 @@ class Software:
         pass
 
     def gen_conf(self):
-        for f in self.CONFIG_FILE_LIST:
-            # copy template file to update package
-            template_filename = f + self.CONST_CONFIG_TEMPATE_FILE_SUFFIX
-            src = os.path.join(self._config_template_path, template_filename)
-            dst = os.path.join(self._path, f)
-            copyfile(src, dst)
-
-            self._replace_port(dst)
+        self.__init_config_file_list()
+        for f in self._config_file_list:
+            src, dst = self._get_conf_path(f)
+            config_file_path = self._get_given_config_file_path(f)
+            if config_file_path:
+                # use given config file
+                src = config_file_path
+                if not os.path.isfile(src):
+                    print 'WARN: config file ' + f + ' not found on given path ' + src
+                    continue
+                copyfile(src, dst)
+            else:
+                # generate by template file
+                if not os.path.isfile(src):
+                    print 'WARN: config file ' + f + ' not found, skip'
+                    continue
+                copyfile(src, dst)
+                self._software_config_op(dst)
         pass
 
     def gen_bin(self):
@@ -74,16 +89,25 @@ class Software:
     # protected
     ################################
  
-    def _gen_config_path(self):
+    def _get_given_config_file_path(self, filename):
+        key = self.CONFIG_FILE_PROPERTY_PREFIX + filename.replace('/', '.')
+        if self._config.has_key(key):
+            return self._config[key]
+        return None
+
+    def _get_conf_path(self, path):
+        template_filename = path + self.CONST_CONFIG_TEMPATE_FILE_SUFFIX
+        src = os.path.join(self._config_template_path, template_filename)
+        dst = os.path.join(self._path, path)
+        return [src, dst]
+
+    def _replace_port(self, path):
+        file_content_replace(path, self.PORT_LABEL, self._port)
         pass
 
-    def _replace_port(self, file_path):
-        content = open(file_path).read()
-        content = content.replace(self.PORT_LABEL, self._port)
-        f = file(file_path, 'w')
-        f.write(content)
-        f.close()
-        pass   
+    def _replace_user(self, path):
+        file_content_replace(path, self.USER_LABEL, self._user)
+        pass
 
     def _gen_script_content(self):
         return ""
@@ -110,20 +134,29 @@ class Software:
             os.makedirs(self._path)
 
         # get software config template file dir
-        self._config_template_path = os.path.join(
-                CONFIG_TEMPLATE_DIR, self._fullname)
+        self._config_template_path = os.path.join(CONFIG_TEMPLATE_DIR, \
+                self._fullname)
 
         # gen destination deploy path
         # example: /home/work/software/nginx-1.5.4
-        user = id.split('@')[0]
-        self._deploy_path = os.path.join('/home', user, 'software', self._fullname)
+        self._deploy_path = os.path.join('/home', self._user, 'software', \
+                self._fullname)
         pass
 
     def __init_port(self, config):
-        if config.has_key('port'):
-            self._port = config['port'].strip()
+        if config.has_key('listen.port'):
+            self._port = config['listen.port'].strip()
         else:
             self._port = str(self.CONST_DEFAULT_PORT)
+        pass
+
+    def __init_config_file_list(self):
+        file_list = self.DEFAULT_CONFIG_FILE_LIST
+        if self._config.has_key('config.file.list'):
+            tmp = self._config['config.file.list'].split(',')
+            for s in tmp:
+                file_list.append(s.strip())
+        self._config_file_list = list(set(file_list))
         pass
 
 

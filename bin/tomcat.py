@@ -16,12 +16,16 @@ class Tomcat(Software):
     CONST_FULLNAME = 'apache-tomcat'
     CONST_DEFAULT_VERSION = '7.0.42'
     CONST_DEFAULT_PORT = 8080
+    CONST_DEFAULT_SHUTDOWN_PORT = 9005
     CONST_APP_SUFFIX = '.war'
 
-    CONFIG_FILE_LIST = ['conf/server.xml']
+    SHUTDOWN_PORT_LABEL = '#SHUTDOWN_PORT#'
 
-    def gen_conf(self):
-        Software.gen_conf(self)
+    DEFAULT_CONFIG_FILE_LIST = ['conf/server.xml']
+
+    def _software_config_op(self, path):
+        self._replace_port(path)
+        self._replace_shutdown_port(path)
         pass
 
     def gen_app(self):
@@ -46,7 +50,20 @@ class Tomcat(Software):
             os.remove(dst)
         pass
 
+    def _replace_shutdown_port(self, path):
+        if self._config['shutdown.port']:
+            shutdown_port = self._config['shutdown.port']
+        else:
+            print 'WARN: tomcat shutdown port not set, use default ' + \
+                    self.CONST_DEFAULT_SHUTDOWN_PORT
+            shutdown_port = self.CONST_DEFAULT_SHUTDOWN_PORT
+        file_content_replace(path, self.SHUTDOWN_PORT_LABEL, shutdown_port)
+        pass
+
     def _gen_script_content(self):
-        cmd = 'sh $dir/../bin/startup.sh'
+        cmd = 'export TOMCAT_HOME=$dir/..'
+        cmd += ' && export CATALINA_HOME=$TOMCAT_HOME'
+        cmd += ' && export CATALINA_BASE=$TOMCAT_HOME'
+        cmd += ' && sh $dir/../bin/startup.sh'
         s = '\n'.join(self.START_SCRIPT_CONTENT) % (self._port, cmd)
         return s

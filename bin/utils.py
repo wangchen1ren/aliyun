@@ -18,3 +18,10 @@ def copyfile(src, dst):
     shutil.copyfile(src, dst)
     pass
 
+def file_content_replace(path, old_str, new_str):
+    content = open(path).read()
+    content = content.replace(old_str, new_str)
+    f = file(path, 'w')
+    f.write(content)
+    f.close()
+    pass
