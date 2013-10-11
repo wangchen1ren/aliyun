@@ -6,6 +6,7 @@ __email__ = "pdd.list@e-future.com.cn"
 __version__ = "1.0.0"
 
 import os
+import shutil
 from constants import *
 
 class Software:
@@ -20,7 +21,9 @@ class Software:
                             "fi"
                             ]
 
-    PORT_LABEL = '$PORT$'
+    CONFIG_FILE_LIST = []
+    CONST_CONFIG_TEMPATE_FILE_SUFFIX = '.template'
+    PORT_LABEL = '#PORT#'
 
     def __init__(self, id, config):
         self.config = config
@@ -29,35 +32,54 @@ class Software:
         pass
 
     def __init_path(self, id):
-        user = id.split('@')[0]
-        instance_home = os.path.join(INSTANCE_DIR, id)
+        # gen software fullname
+        # example: nginx-1.5.4
         if self.config.has_key('version'):
             version = self.config['version']
         else:
             version = self.CONST_DEFAULT_VERSION
-        fullname = self.CONST_FULLNAME + '-' + version
-        self.path = os.path.join(instance_home, fullname)
+        self.fullname = self.CONST_FULLNAME + '-' + version
+
+        # gen update package path
+        instance_home = os.path.join(INSTANCE_DIR, id)
+        self.path = os.path.join(instance_home, self.fullname)
         if not os.path.isdir(self.path):
             os.makedirs(self.path)
-        self.deploy_path = os.path.join('/home', user, 'software', fullname)
+
+        # get software config template file dir
+        self.config_template_path = os.path.join(
+                CONFIG_TEMPLATE_DIR, self.fullname)
+
+        # gen destination deploy path
+        # example: /home/work/software/nginx-1.5.4
+        user = id.split('@')[0]
+        self.deploy_path = os.path.join('/home', user, 'software', self.fullname)
         pass
 
     def __init_port(self, config):
         if config.has_key('port'):
             self.port = config['port'].strip()
         else:
-            self.port = self.CONST_DEFAULT_PORT
+            self.port = str(self.CONST_DEFAULT_PORT)
         pass
 
     def gen_conf(self):
-        if self.config_files:
-            for f in self.config_files:
-                self.replace_port(file_path)
+        for f in self.CONFIG_FILE_LIST:
+            # copy template file to update package
+            template_filename = f + self.CONST_CONFIG_TEMPATE_FILE_SUFFIX
+            src = os.path.join(self.config_template_path, template_filename)
+            dest = os.path.join(self.path, f)
+            dest_dir = os.path.dirname(dest)
+            if not os.path.isdir(dest_dir):
+                os.makedirs(dest_dir)
+            shutil.copy(src, dest)
+
+            self.replace_port(dest)
         pass
 
     def replace_port(self, file_path):
         content = open(file_path).read()
-        content.replace(self.PORT_LABEL, self.port)
+        content = content.replace(self.PORT_LABEL, self.port)
         f = file(file_path, 'w')
         f.write(content)
         f.close()

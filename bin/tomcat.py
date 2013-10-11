@@ -18,8 +18,14 @@ class Tomcat(Software):
     CONST_DEFAULT_PORT = 8080
     CONST_APP_SUFFIX = '.war'
 
+    CONFIG_FILE_LIST = ['conf/server.xml']
+
     def __init__(self, id, config):
         Software.__init__(self, id, config)
+        pass
+
+    def gen_conf(self):
+        Software.gen_conf(self)
         pass
 
     def gen_app(self):

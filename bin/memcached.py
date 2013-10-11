@@ -12,7 +12,7 @@ class Memcached(Software):
 
     CONST_FULLNAME = 'memcached'
     CONST_DEFAULT_VERSION = '1.4.15'
-    CONST_DEFAULT_PORT = '11211'
+    CONST_DEFAULT_PORT = 11211
 
     def __init__(self, id, config):
         Software.__init__(self, id, config)
