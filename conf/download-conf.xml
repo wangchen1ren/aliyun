@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <software name="nginx-1.5.4.tar.gz" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/nginx-1.5.4.tar.gz</value>
+        </property>
+    </software>
+    <config name="node-conf.xml" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/test.xml</value>
+        </property>
+    </config>
+    <app name="edmsv1.war" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/edmsv1.war</value>
+        </property>
+    </app>
+    <other name="test" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/test</value>
+        </property>
+    </other>
+</configuration>

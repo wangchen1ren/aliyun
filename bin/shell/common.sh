@@ -25,7 +25,7 @@ export NOAH_HOME=`dirname "$bin"`
 export TOOLS_HOME=$NOAH_HOME/tools
 
 export DOWNLOAD_HOME=$NOAH_HOME/download/`date +%Y%m%d`
-export NOAH_UPDATE_CONF_DIR=$DOWNLOAD_HOME/conf
+export NOAH_UPDATE_CONF_DIR=$DOWNLOAD_HOME/config
 export NOAH_UPDATE_APP_DIR=$DOWNLOAD_HOME/app
 export NOAH_UPDATE_SOFTWARE_DIR=$DOWNLOAD_HOME/software
 export NOAH_UPDATE_OTHER_DIR=$DOWNLOAD_HOME/other

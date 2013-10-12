@@ -7,15 +7,28 @@ __version__ = "1.0.0"
 
 import os
 import shutil
+import urlparse
+import urllib2
+
 from constants import *
 
 def copyfile(src, dst):
-    if not os.path.isfile(src):
-        print "file not found " + src
     dst_dir = os.path.dirname(dst)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
-    shutil.copyfile(src, dst)
+
+    url = urlparse.urlparse(src, scheme = 'file')
+    if url.scheme == 'file':
+        if not os.path.isfile(src):
+            print "file not found " + src
+        shutil.copyfile(src, dst)
+    else:
+        r = urllib2.urlopen(urllib2.Request(src))
+        try:
+            with open(fileName, 'wb') as f:
+                shutil.copyfileobj(r,f)
+        finally:
+            r.close()
     pass
 
 def file_content_replace(path, old_str, new_str):

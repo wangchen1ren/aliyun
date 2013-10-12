@@ -3,7 +3,8 @@
 bin=`dirname "$0"`
 bin=`cd $bin; pwd`
 
-. "$bin"/common.sh
+. "$bin"/shell/common.sh
 
 sh $bin/clean.sh
-python deploy.py
+python $bin/py/download.py "$@"
+#python $bin/py/deploy.py "$@"

@@ -49,9 +49,6 @@ class Software:
             if config_file_path:
                 # use given config file
                 src = config_file_path
-                if not os.path.isfile(src):
-                    print 'WARN: config file ' + f + ' not found on given path ' + src
-                    continue
                 copyfile(src, dst)
             else:
                 # generate by template file
