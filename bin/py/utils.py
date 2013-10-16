@@ -7,10 +7,17 @@ __version__ = "1.0.0"
 
 import os
 import shutil
+import subprocess
+import sys
 import urlparse
 import urllib2
 
 from constants import *
+
+def error(ret, skip = False):
+    if skip == False:
+        sys.exit(1)
+    pass
 
 def copyfile(src, dst):
     dst_dir = os.path.dirname(dst)
@@ -39,3 +46,11 @@ def file_content_replace(path, old_str, new_str):
         f.write(text)
         f.close()
     pass
+
+def shell_exec(cmd):
+    process = subprocess.Popen(cmd, shell = True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
+    out, err = process.communicate()
+    returncode = process.returncode
+    return [returncode, out, err]

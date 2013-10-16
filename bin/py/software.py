@@ -78,8 +78,13 @@ class Software:
         return cmd
 
     def get_stop_command(self):
-        cmd = "ps xf | grep " + self.CONST_FULLNAME
-        cmd += " | awk '{print $1}' | xargs kill -9 2>/dev/null"
+        cmd = "for p in `ps xf | grep " + self.CONST_FULLNAME + " | grep -v grep | awk '{print $1}'`; do"
+        cmd += " kill -9 $p; done"
+        return cmd
+
+    def get_monitor_command(self):
+        cmd = "ps xf | grep " + self.CONST_FULLNAME + " | grep -v grep"
+        cmd += " && /usr/sbin/lsof -i :" + str(self._port)
         return cmd
 
     ################################
@@ -144,7 +149,7 @@ class Software:
         if config.has_key('listen.port'):
             self._port = config['listen.port'].strip()
         else:
-            self._port = str(self.CONST_DEFAULT_PORT)
+            error("Port not set")
         pass
 
     def __init_config_file_list(self):

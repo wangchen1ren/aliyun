@@ -24,12 +24,6 @@ this="$dir/$script"
 export NOAH_HOME=`dirname "$bin"`
 export TOOLS_HOME=$NOAH_HOME/tools
 
-export DOWNLOAD_HOME=$NOAH_HOME/download/`date +%Y%m%d`
-export NOAH_UPDATE_CONF_DIR=$DOWNLOAD_HOME/config
-export NOAH_UPDATE_APP_DIR=$DOWNLOAD_HOME/app
-export NOAH_UPDATE_SOFTWARE_DIR=$DOWNLOAD_HOME/software
-export NOAH_UPDATE_OTHER_DIR=$DOWNLOAD_HOME/other
-
 if [ $# -gt 1 ]; then
   if [ "--config" = "$1" ]; then
     shift
@@ -73,6 +67,11 @@ while [ "X$1" != "X" ]; do
         shift; shift;
         continue
         ;;
+        -d )
+        export work_date="$2"
+        shift; shift;
+        continue
+        ;;
         * )
         break
         ;;
@@ -81,9 +80,20 @@ done
 
 export sshexec="$TOOLS_HOME/sshexec/bin/sshexec.sh"
 
-WORKDIR=$NOAH_HOME/workdir
-LOGDIR=$WORKDIR/log
-INSTANCEDIR=$WORKDIR/instance
+if [ "X" = "X$work_date" ]; then
+    work_date=`date +%Y%m%d`
+fi
+
+export DOWNLOAD_HOME=$NOAH_HOME/download/$work_date
+export NOAH_UPDATE_CONF_DIR=$DOWNLOAD_HOME/config
+export NOAH_UPDATE_APP_DIR=$DOWNLOAD_HOME/app
+export NOAH_UPDATE_SOFTWARE_DIR=$DOWNLOAD_HOME/software
+export NOAH_UPDATE_OTHER_DIR=$DOWNLOAD_HOME/other
+
+
+export WORKDIR=$NOAH_HOME/workdir
+export LOGDIR=$WORKDIR/log
+export INSTANCEDIR=$WORKDIR/$work_date
 if [ ! -d $LOGDIR ]; then
     mkdir -p $LOGDIR
 fi

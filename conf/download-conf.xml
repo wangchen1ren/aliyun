@@ -12,6 +12,13 @@
             <value>/home/frozenpig/workspace/aliyun/tmp/test.xml</value>
         </property>
     </config>
+    <config name="account-conf.xml" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/account-conf.xml</value>
+        </property>
+    </config>
+
     <app name="edmsv1.war" >
         <property>
             <name>download.url</name>
