@@ -13,10 +13,8 @@ import subprocess
 from base_operation import BaseOperation
 from constants import *
 from logger import Logger
-from memcached import Memcached
 from noah_conf import NoahUpdateConf
-from nginx import Nginx
-from tomcat import Tomcat
+from software_importer import *
 from utils import *
 
 class Deployer(BaseOperation):
@@ -63,8 +61,16 @@ class Deployer(BaseOperation):
 
     def __start_service(self, node):
         self.logger.info("Start server")
-        self._call_shell(node, 'start_service.sh')
+        ret = self._call_shell(node, 'start_service.sh', True)
+        if ret != 0:
+            self.__rollback_service(node)
         self.logger.info("Start server complete")
+        pass
+
+    def __rollback_service(self, node):
+        self.logger.info("Rollback service")
+        self._call_shell(node, 'rollback_service.sh')
+        self.logger.info("Rollback service complete")
         pass
     
     def __gen_script(self, id, softs, type):
@@ -92,6 +98,7 @@ class Deployer(BaseOperation):
         pass
        
     def __gen_software_update_package(self, node):
+        self.logger.info("start gen update package")
         host, user, password = self._parse_node(node)
         id = user + '@' + host
         software_instance = []
@@ -99,10 +106,15 @@ class Deployer(BaseOperation):
             class_name = soft.capitalize()
             s = eval(class_name)(id, node['soft'][soft])
             software_instance.append(s)
+            self.logger.info("gen bin")
             s.gen_bin()
+            self.logger.info("gen conf")
             s.gen_conf()
+            self.logger.info("gen app")
             s.gen_app()
+        self.logger.info("gen scripts")
         self.__gen_script(id, software_instance, 'start')
         self.__gen_script(id, software_instance, 'stop')
+        self.logger.info("gen update package complete")
         pass
 

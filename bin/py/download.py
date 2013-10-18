@@ -7,7 +7,6 @@ __version__ = "1.0.0"
 
 import sys
 import os
-import subprocess
 
 from constants import *
 from noah_conf import NoahDownloadConf

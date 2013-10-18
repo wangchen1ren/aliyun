@@ -18,31 +18,35 @@ echo "====================================" >>$log
 #
 #####################################################
 
-export date=`date +%Y%m%d`
+export date=$work_date
 
 function upload_files() {
-    echo -e "\033[32m[1/4] Uploading files ...\033[0m" >>$log
+    echo "<font color="#33CC00">[1/4] Uploading files ...</font>" >>$log
     echo "Upload file list to $work_user@$host:" >>$log
-    find $INSTANCEDIR/$work_user@$host -type f >>$log
-    echo "" >>$log
+    instance="$work_user@$host"
+    find $INSTANCEDIR/$instance -type f >>$log
+    echo >>$log
     # gen local md5
-    cd $INSTANCEDIR/$work_user@$host
-    find . -type f | xargs md5sum | sort >../.tmp_local_md5 2>/dev/null
+    cd $INSTANCEDIR/$instance
+    find . -type f | xargs md5sum | sort >$INSTANCEDIR/.tmp_local_md5 2>/dev/null
     cd $bin && mv $INSTANCEDIR/.tmp_local_md5 $bin/
+    cd $INSTANCEDIR && rm -f $instance.tar.gz && tar zcfh $instance.tar.gz $instance
+    #md5sum "$instance.tar.gz" >$INSTANCEDIR/.tmp_local_md5
+    #cd $bin && mv $INSTANCEDIR/.tmp_local_md5 $bin/
     # upload file and gen remote md5
-    cmd="rm -rf $date && mv $work_user@$host $date"
+    cmd="rm -rf $date && tar zxf $instance.tar.gz && mv $instance $date"
     cmd="$cmd && cd $date && find . -type f | xargs md5sum | sort"
     echo "[1/4] uploading $INSTANCEDIR/$work_user@$host" \
         "to $work_user@$host:/home/$work_user/deploy" >>$log
-    $sshexec -f $INSTANCEDIR/$work_user@$host \
+    $sshexec -f $INSTANCEDIR/$work_user@$host.tar.gz -d \
         $work_user:$work_passwd@$host:/home/$work_user/deploy \
         "$cmd" >$bin/.tmp_remote_md5 2>>$log
     # check if upload successful
     echo "[1/4] Checking files md5sum ..." >>$log
     if diff $bin/.tmp_local_md5 $bin/.tmp_remote_md5 >>$log 2>&1; then
-        echo "\033[32m[1/4] Upload file complete.\033[0m" >>$log
+        echo "<font color="#33CC00">[1/4] Upload file complete.</font>" >>$log
     else
-        echo -e "\033[31mError in uploading files to $work_user@$host.\033[0m" >&2
+        echo "<font color="#FF0000">Error in uploading files to $work_user@$host.</font>" >&2
         exit 1
     fi
 }
@@ -54,7 +58,7 @@ function stop() {
     if [ $? -eq 0 ]; then
         echo "[2/4] Services stopped." >>$log
     else
-        echo -e "\033[31mError in stopping services on $work_user@$host.\033[0m" >&2
+        echo "<font color="#FF0000">Error in stopping services on $work_user@$host.</font>" >&2
         exit 1
     fi
 }
@@ -67,7 +71,7 @@ function update_files() {
     if [ $? -eq 0 ]; then
         echo "[3/4] Update files success." >>$log
     else
-        echo -e "\033[31mError in updating files on $work_user@$host.\033[0m" >&2
+        echo "<font color="#FF0000">Error in updating files on $work_user@$host.</font>" >&2
         exit 1
     fi
 }
@@ -79,7 +83,7 @@ function start() {
     if [ $? -eq 0 ]; then
         echo "[4/4] Start services success" >>$log
     else
-        echo -e "\033[31mError in starting services on $work_user@$host.\033[0m" >&2
+        echo "<font color="#FF0000">Error in starting services on $work_user@$host.</font>" >&2
         exit 1
     fi
 }

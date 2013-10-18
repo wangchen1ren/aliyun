@@ -23,7 +23,7 @@ function check_node() {
     $sshexec -f $INSTANCEDIR/$work_user@$host/noah_monitor.sh -d \
             $work_user:$work_passwd@$host:~ "$cmd" >>$log 2>&1
     if [ $? -ne 0 ]; then
-        echo -e "\033[31mNode $work_user@$host.\033[0m error" >&2
+        echo -e "<font color="#FF0000">Node $work_user@$host.\033[0m error" >&2
         exit 1
     fi
     echo >>$log

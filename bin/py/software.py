@@ -7,6 +7,8 @@ __version__ = "1.0.0"
 
 import os
 from constants import *
+
+from logger import Logger
 from utils import *
 
 class Software:
@@ -34,6 +36,7 @@ class Software:
     ################################
 
     def __init__(self, id, config):
+        self.logger = Logger(NOAH_LOG_FILE)
         self._user = id.split('@')[0]
         self._config = config
         self.__init_fullname()
@@ -149,7 +152,10 @@ class Software:
         if config.has_key('listen.port'):
             self._port = config['listen.port'].strip()
         else:
-            error("Port not set")
+            self._port = self.CONST_DEFAULT_PORT
+            #msg = 'Port not set'
+            #self.logger.error(msg)
+            #error(msg, 1)
         pass
 
     def __init_config_file_list(self):

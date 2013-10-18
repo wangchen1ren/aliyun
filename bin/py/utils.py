@@ -14,7 +14,8 @@ import urllib2
 
 from constants import *
 
-def error(ret, skip = False):
+def error(msg, ret, skip = False):
+    sys.stderr.write(msg)
     if skip == False:
         sys.exit(1)
     pass

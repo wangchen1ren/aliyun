@@ -31,9 +31,10 @@ class BaseOperation:
         #print cmd
         ret, out, err = shell_exec(cmd)
         if ret != 0:
-            self.logger.error("Error in running " + script_file)
-            self.logger.error(err)
-            self.logger.error("Return code: " + str(ret))
-            error(ret, error_skip)
+            msg = "Error in running " + script_file + "\n"
+            msg += err
+            msg += "Return code: " + str(ret)
+            self.logger.error(msg)
+            error(msg, ret, error_skip)
         return ret
 

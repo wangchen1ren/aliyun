@@ -8,13 +8,15 @@ user=$1
 basedir=$dir
 softdir=/home/$user/software
 
+BAK_SUFFIX='.backup'
+
 for f in `find . -type f`; do
     dirname=`dirname $f`
     if [ "$dirname" = "." ]; then
         continue
     else
         if [ -f $softdir/$f ]; then
-            cp $softdir/$f $f.bak
+            cp $softdir/$f "${f}${BAK_SUFFIX}"
         fi
         sdir=`dirname $softdir/$f`
         if [ ! -d $sdir ]; then

@@ -5,8 +5,6 @@ __author__ = "wangchen"
 __email__ = "pdd.list@e-future.com.cn"
 __version__ = "1.0.0"
 
-import subprocess
-
 from constants import *
 from software import Software
 from utils import *
@@ -29,7 +27,7 @@ class Tomcat(Software):
         pass
 
     def gen_app(self):
-        dest_root = os.path.join(self._path, 'webapps')
+        dst_root = os.path.join(self._path, 'webapps')
         if not self._config.has_key('applist') or \
                 self._config['applist'] == '':
             applist = []
@@ -39,15 +37,18 @@ class Tomcat(Software):
             app = app.strip()
             app_filename = app + self.CONST_APP_SUFFIX
             src = os.path.join(NOAH_UPDATE_APP_DIR, app_filename)
-            dst = os.path.join(dest_root, app, app_filename)
+            dst = os.path.join(dst_root, app, app_filename)
             copyfile(src, dst)
 
             #uncompress
             dst_dir = os.path.dirname(dst)
             cmd = "cd %s && jar -xf %s" % (dst_dir, app_filename)
-            ret = subprocess.call(cmd, shell = True)
+            ret, out, err = shell_exec(cmd)
             if ret != 0:
-                sys.exit(ret)
+                msg = "gen tomcat app error: " + "\n"
+                msg += err
+                self.logger.error(msg)
+                error(msg, ret)
             os.remove(dst)
         pass
 

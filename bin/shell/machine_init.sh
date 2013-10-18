@@ -13,8 +13,8 @@ echo "====================================" >>$log
 
 function error() {
     func=$1
-    echo -e "\033[31mError in $func.\033[0m" >&2
-    echo -e "\033[31mPlease see $log and check manually!\033[0m" >&2
+    echo "<font color="#FF0000">Error in $func.</font>" >&2
+    echo "<font color="#FF0000">Please see $log and check manually!</font>" >&2
     exit 1
 }
 
@@ -29,7 +29,7 @@ export TOTAL_STEPS=4
 # 1. update yum
 function update_yum() {
     func="update_yum"
-    echo -e "\033[32m[1/$TOTAL_STEPS] Update yum source ...\033[0m" >>$log
+    echo "<font color="#33CC00">[1/$TOTAL_STEPS] Update yum source ...</font>" >>$log
     $sshexec root:$root_passwd@$host:~ "test -f update_yum_source.done" >>$log 2>&1
     if [ $? -ne 0 ]; then
         $sshexec -f $TOOLS_HOME/update_yum_source.sh \
@@ -39,19 +39,19 @@ function update_yum() {
             error "$func"
         fi
     fi
-    echo -e "\033[32m[1/$TOTAL_STEPS] Complete update yum source.\033[0m" >>$log
+    echo "<font color="#33CC00">[1/$TOTAL_STEPS] Complete update yum source.</font>" >>$log
 }
 
 # 2. update gcc
 function update_gcc() {
     func="update_gcc"
-    echo -e "\033[32m[2/$TOTAL_STEPS] Update gcc ...\033[0m" >>$log
+    echo "<font color="#33CC00">[2/$TOTAL_STEPS] Update gcc ...</font>" >>$log
     cmd="sed -i 's/^exclude/#exclude/' /etc/yum.conf"
     cmd="$cmd && yum -y install gcc gcc-c++"
     cmd="$cmd && sed -i 's/^#exclude/exclude/' /etc/yum.conf"
     $sshexec root:$root_passwd@$host:~ "$cmd" >>$log 2>&1
     if [ $? -eq 0 ]; then
-        echo -e "\033[32m[2/$TOTAL_STEPS] Complete update gcc.\033[0m" >>$log
+        echo "<font color="#33CC00">[2/$TOTAL_STEPS] Complete update gcc.</font>" >>$log
     else
         error "$func"
     fi
@@ -60,17 +60,18 @@ function update_gcc() {
 # 3. update libs
 function update_libs() {
     func="update_libs"
-    echo -e "\033[32m[3/$TOTAL_STEPS] Update dependent libraries ...\033[0m" >>$log
+    echo "<font color="#33CC00">[3/$TOTAL_STEPS] Update dependent libraries ...</font>" >>$log
+    #echo "<font color="#33CC00">[3/$TOTAL_STEPS] Update dependent libraries ...</font>" >>$log
     # Note:
     #   system      : lsof iptables
     #   nginx       : prce zlib
     #   memcached   : libevent
-    lib_list="lsof iptables pcre-devel zlib-devel libevent-devel"
+    lib_list="lsof iptables zip unzip pcre-devel zlib-devel libevent-devel"
     echo "Library list: $lib_list" >>$log
     cmd="yum -y install $lib_list"
     $sshexec root:$root_passwd@$host:~ "$cmd" >>$log 2>&1
     if [ $? -eq 0 ]; then
-        echo -e "\033[32m[3/$TOTAL_STEPS] Complete update dependent libraries.\033[0m" >>$log
+        echo "<font color="#33CC00">[3/$TOTAL_STEPS] Complete update dependent libraries.</font>" >>$log
     else
         error "$func"
     fi
@@ -80,11 +81,11 @@ function update_libs() {
 # 4. mapping port 80 to 8080
 function prerouting() {
     func="prerouting"
-    echo -e "\033[32m[4/$TOTAL_STEPS] Pre Routing ...\033[0m" >>$log
+    echo "<font color="#33CC00">[4/$TOTAL_STEPS] Pre Routing ...</font>" >>$log
     $sshexec -f $TOOLS_HOME/prerouting.sh -d \
         root:$root_passwd@$host:~ "sh prerouting.sh" >>$log 2>&1
     if [ $? -eq 0 ]; then
-        echo -e "\033[32m[4/$TOTAL_STEPS] Complete pre routing.\033[0m" >>$log
+        echo "<font color="#33CC00">[4/$TOTAL_STEPS] Complete pre routing.</font>" >>$log
     else
         error "$func"
     fi

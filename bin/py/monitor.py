@@ -10,10 +10,8 @@ import sys
 from base_operation import BaseOperation
 from constants import *
 from logger import Logger
-from memcached import Memcached
-from nginx import Nginx
 from noah_conf import NoahUpdateConf
-from tomcat import Tomcat
+import software_importer
 
 class Monitor(BaseOperation):
 

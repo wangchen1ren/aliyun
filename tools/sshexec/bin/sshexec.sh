@@ -103,7 +103,7 @@ then
 fi
 
 if [ $hasFile = "true" ]; then
-    sshpass -p "$pass" scp -r -o StrictHostKeyChecking=no $files "$user@$hostname:$workpath"
+    sshpass -p "$pass" scp -l 6400 -r -o StrictHostKeyChecking=no $files "$user@$hostname:$workpath"
 fi
 
 # exec command
