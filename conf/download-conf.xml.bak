@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <software name="mule-standalone-3.2.1.tar.gz" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/mule-standalone-3.2.1.tar.gz</value>
+        </property>
+    </software>
+    <config name="node-conf.xml" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/node-conf.xml</value>
+        </property>
+    </config>
+    <config name="account-conf.xml" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/account-conf.xml</value>
+        </property>
+    </config>
+    <app name="PortalUI.war" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/PortalUI.war</value>
+        </property>
+    </app>
+    <app name="app-portal-esb.zip" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/app-portal-esb.zip</value>
+        </property>
+    </app>
+    <other name="nginx.conf" >
+        <property>
+            <name>download.url</name>
+            <value>/home/frozenpig/workspace/aliyun/tmp/nginx.conf</value>
+        </property>
+    </other>
+</configuration>

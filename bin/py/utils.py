@@ -11,6 +11,7 @@ import subprocess
 import sys
 import urlparse
 import urllib2
+import hashlib
 
 from constants import *
 
@@ -31,12 +32,21 @@ def copyfile(src, dst):
             print "file not found " + src
         shutil.copyfile(src, dst)
     else:
-        r = urllib2.urlopen(urllib2.Request(src))
+        remote = urllib2.urlopen(src)
+        hash = hashlib.md5()
+        if os.path.isfile(dst):
+            os.remove(dst)
+        file = open(dst, 'a')
         try:
-            with open(fileName, 'wb') as f:
-                shutil.copyfileobj(r,f)
+            while True:
+                data = remote.read(4096)
+                if not data:
+                    break
+                hash.update(data)
+                file.write(data)
         finally:
-            r.close()
+            remote.close()
+            file.close()
     pass
 
 def file_content_replace(path, old_str, new_str):

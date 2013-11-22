@@ -3,6 +3,6 @@
 bin=`dirname "$0"`
 bin=`cd $bin; pwd`
 
-. "$bin"/shell/common.sh "$@"
+. "$bin"/shell/env.sh "$@"
 
-rm -rf $WORKDIR $DOWNLOAD_HOME $bin/py/*.pyc $bin/.tmp*
+rm -rf $WORKDIR $bin/py/*.pyc $bin/.tmp*

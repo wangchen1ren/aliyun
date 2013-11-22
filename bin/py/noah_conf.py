@@ -4,6 +4,7 @@ import os
 from xml.etree import ElementTree
 
 from constants import *
+from logger import Logger
 
 class NoahConf:
     
@@ -22,6 +23,15 @@ class NoahConf:
             map[name] = value
         return map
 
+'''
+NoahUpdateConf
+    |- accounts as user@host => passwd
+    |- nodes as node
+        |- id = user@host
+        |- host
+        |- user
+        |- soft as name => properties
+'''
 class NoahUpdateConf(NoahConf):
 
     CONST_DEFAULT_PASSWORD = 'password'
@@ -98,6 +108,13 @@ class NoahUpdateConf(NoahConf):
             return self.CONST_DEFAULT_PASSWORD
         pass
 
+'''
+NoahDownloadConf
+    |- download_list as item
+        |- type
+        |- name
+        |- url
+'''
 class NoahDownloadConf(NoahConf):
 
     def __init__(self):

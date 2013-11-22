@@ -19,9 +19,10 @@ from utils import *
 
 class Deployer(BaseOperation):
 
-    def __init__(self, conf = None):
+    def __init__(self, is_test = False, conf = None):
         self.logger = Logger(NOAH_LOG_FILE)
         BaseOperation.__init__(self, conf)
+        self.__is_test = is_test
         pass
 
     def deploy(self):
@@ -39,6 +40,9 @@ class Deployer(BaseOperation):
             self.__install_software(node)
             self.__gen_software_update_package(node)
             self.__start_service(node)
+            if self.__is_test:
+                # Test mode, just try one instance
+                break
         pass
 
     def __init_machines(self, node):

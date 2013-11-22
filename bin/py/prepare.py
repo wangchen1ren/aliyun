@@ -5,11 +5,15 @@ __author__ = "wangchen"
 __email__ = "pdd.list@e-future.com.cn"
 __version__ = "1.0.0"
 
-from deployer import Deployer
+from downloader import Downloader
+
+def download():
+    downloader = Downloader()
+    downloader.download()
+    pass
 
 def main():
-    deployer = Deployer()
-    deployer.deploy()
+    download()
     pass
 
 if __name__ == '__main__':
